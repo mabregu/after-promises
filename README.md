@@ -1,2 +1,2 @@
-# Ejemplos con Promise
+# Ejemplos con Promises
 
