@@ -2,6 +2,7 @@ const URL = 'https://pokeapi.co/api/v2/pokemon/';
 let container = document.getElementById('pokemon-container');
 let btn = document.getElementById('btn-pokemon');
 let input = document.getElementById('input-pokemon');
+let failMessage = document.getElementById('fail-message');
 
 function getPokemon(param) {
     let url = URL + param;
@@ -25,6 +26,9 @@ function getPokemon(param) {
 }
 
 function renderPromise(promise) {
+    let ability = promise.abilities.map((item) => {
+        return item.ability.name;
+    });
     container.innerHTML = `
     <ul class="p-0 m-0 leading-6 border-0 border-gray-300">
         <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
@@ -45,21 +49,25 @@ function renderPromise(promise) {
         <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
             <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full">
                 <span class="text-sm font-bold">✓</span>
-            </span> Peso: ${promise.weight}
+            </span> Peso: ${promise.weight} - Altura: ${promise.height}
         </li>
         <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
             <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full">
                 <span class="text-sm font-bold">✓</span>
-            </span> Altura: ${promise.height}
-        </li>        
+            </span> Habilidades: ${ability.join(', ')}
+        </li>
     </ul>
-    <img src="${promise.sprites.front_default}" alt="${promise.name}">
+    <span class="inline-flex items-baseline">
+        <img class="self-center rounded-full mx-1" src="${promise.sprites.front_default}" alt="${promise.name}">
+        <img class="self-center rounded-full mx-1" src="${promise.sprites.back_default}" alt="${promise.name}">
+    </span>
     `;
 }
 
 function clearData() {
     container.innerHTML = '';
     input.value = '';
+    input.classList.remove('border-red-500');
 }
 
 function fail(msj) {
@@ -68,6 +76,8 @@ function fail(msj) {
             <span class="block text-red-600 xl:inline">${msj}</span>
         </h1>
     `;
+    
+    input.classList.add('border-red-500');
 }
 
 btn.addEventListener('click', () => {
@@ -75,7 +85,7 @@ btn.addEventListener('click', () => {
     let promesa = getPokemon(pokemon);
     if (pokemon !== '') {
         promesa.then((data) => {
-            console.log("pokedata", data);
+            input.classList.remove('border-red-500');
             renderPromise(data);
         });
     } else fail('Tenes que ingresar un pokemon, picaron!');
