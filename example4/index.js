@@ -71,11 +71,11 @@ function fail(msj) {
 }
 
 btn.addEventListener('click', () => {
-    let pokemon = input.value;
+    let pokemon = input.value.toLowerCase();
     let promesa = getPokemon(pokemon);
-    
     if (pokemon !== '') {
         promesa.then((data) => {
+            console.log("pokedata", data);
             renderPromise(data);
         });
     } else fail('Tenes que ingresar un pokemon, picaron!');
